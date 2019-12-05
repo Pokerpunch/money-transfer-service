@@ -99,10 +99,10 @@ class AccountDAOTest {
     @Test
     fun `should save new account`() {
         // GIVEN an unpersisted account
-        val unpersistedAccount = Account(id = -1).apply { balanceInMinor = 200 }
+        val unpersistedAccount = Account(id = -1).apply { balanceMinor = 200 }
 
         // ... and an expected persisted account
-        val persistedAccount = Account(id = 1).apply { balanceInMinor = 200 }
+        val persistedAccount = Account(id = 1).apply { balanceMinor = 200 }
         HibernateMockHelper.mockSave(session, unpersistedAccount, persistedAccount, persistedAccount.id)
 
         // WHEN we try to save the account

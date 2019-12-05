@@ -13,15 +13,15 @@ class TransferValidatorTest {
         // GIVEN
         val originAccountId = 101L
         val destinationAccountId = 102L
-        val transferAmountInMinor = -1L
+        val transferAmountMinor = -1L
 
         // THEN
         assertThatExceptionOfType(TransferNotPossibleException::class.java).isThrownBy {
 
             // WHEN
-            TransferValidator.validateBeforeStartingTransfer(originAccountId, destinationAccountId, transferAmountInMinor)
+            TransferValidator.validateBeforeStartingTransfer(originAccountId, destinationAccountId, transferAmountMinor)
 
-        }.withMessageContaining("Transfer amount: [$transferAmountInMinor] is not positive")
+        }.withMessageContaining("Transfer amount: [$transferAmountMinor] is not positive")
     }
 
     @Test
@@ -29,15 +29,15 @@ class TransferValidatorTest {
         // GIVEN
         val originAccountId = 101L
         val destinationAccountId = 102L
-        val transferAmountInMinor = 0L
+        val transferAmountMinor = 0L
 
         assertThatExceptionOfType(TransferNotPossibleException::class.java).isThrownBy {
 
             // WHEN
-            TransferValidator.validateBeforeStartingTransfer(originAccountId, destinationAccountId, transferAmountInMinor)
+            TransferValidator.validateBeforeStartingTransfer(originAccountId, destinationAccountId, transferAmountMinor)
 
             // THEN
-        }.withMessageContaining("Transfer amount: [$transferAmountInMinor] is not positive")
+        }.withMessageContaining("Transfer amount: [$transferAmountMinor] is not positive")
     }
 
     @Test
@@ -45,13 +45,13 @@ class TransferValidatorTest {
         // GIVEN
         val originAccountId = 101L
         val destinationAccountId = 101L
-        val transferAmountInMinor = 103L
+        val transferAmountMinor = 103L
 
         // THEN
         assertThatExceptionOfType(TransferNotPossibleException::class.java).isThrownBy {
 
             // WHEN
-            TransferValidator.validateBeforeStartingTransfer(originAccountId, destinationAccountId, transferAmountInMinor)
+            TransferValidator.validateBeforeStartingTransfer(originAccountId, destinationAccountId, transferAmountMinor)
 
         }.withMessageContaining("Origin and destination accounts are the same")
     }
@@ -61,12 +61,12 @@ class TransferValidatorTest {
         // GIVEN
         val originAccountId = 101L
         val destinationAccountId = 102L
-        val transferAmountInMinor = 103L
+        val transferAmountMinor = 103L
 
         assertThatCode {
 
             // WHEN
-            TransferValidator.validateBeforeStartingTransfer(originAccountId, destinationAccountId, transferAmountInMinor)
+            TransferValidator.validateBeforeStartingTransfer(originAccountId, destinationAccountId, transferAmountMinor)
 
             // THEN
         }.doesNotThrowAnyException()
@@ -76,7 +76,7 @@ class TransferValidatorTest {
     fun `should throw exception if origin account does not have sufficient balance`() {
         // GIVEN
         val transferAmount = 100L
-        val originAccount = Account(id = 1).apply { balanceInMinor = transferAmount - 1 }
+        val originAccount = Account(id = 1).apply { balanceMinor = transferAmount - 1 }
 
         // THEN
         assertThatExceptionOfType(TransferNotPossibleException::class.java).isThrownBy {
@@ -84,14 +84,14 @@ class TransferValidatorTest {
             // WHEN
             TransferValidator.validateBeforeFinishingTransfer(originAccount, transferAmount)
 
-        }.withMessageContaining("Origin account [id=${originAccount}] has a balance: ${originAccount.balanceInMinor} that is less than the transfer amount: $transferAmount")
+        }.withMessageContaining("Origin account [id=${originAccount}] has a balance: ${originAccount.balanceMinor} that is less than the transfer amount: $transferAmount")
     }
 
     @Test
     fun `should not throw any exception if origin account has balance equal to transfer amount before finishing transfer`() {
         // GIVEN
         val transferAmount = 100L
-        val originAccount = Account(id = 1).apply { balanceInMinor = transferAmount }
+        val originAccount = Account(id = 1).apply { balanceMinor = transferAmount }
 
         assertThatCode {
 
@@ -106,7 +106,7 @@ class TransferValidatorTest {
     fun `should not throw any exception if origin account has balance greater than the transfer amount before finishing transfer`() {
         // GIVEN
         val transferAmount = 100L
-        val originAccount = Account(id = 1).apply { balanceInMinor = transferAmount }
+        val originAccount = Account(id = 1).apply { balanceMinor = transferAmount }
 
         assertThatCode {
 

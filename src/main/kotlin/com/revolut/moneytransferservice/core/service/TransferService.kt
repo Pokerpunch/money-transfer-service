@@ -14,12 +14,12 @@ class TransferService(
     fun getTransfer(id: Long): Transfer =
         transferDAO.findById(id) ?: throw NotFoundException("Transfer with ID: $id not found")
 
-    fun executeTransfer(originAccountId: Long, destinationAccountId: Long, amountInMinor: Long): Transfer =
+    fun executeTransfer(originAccountId: Long, destinationAccountId: Long, amountMinor: Long): Transfer =
         also {
-            TransferValidator.validateBeforeStartingTransfer(originAccountId, destinationAccountId, amountInMinor)
+            TransferValidator.validateBeforeStartingTransfer(originAccountId, destinationAccountId, amountMinor)
         }.run {
             transferDAO.updateAccountsAndSaveTransfer(
-                Transfer(originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = amountInMinor)
+                Transfer(originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = amountMinor)
             )
         }
 }

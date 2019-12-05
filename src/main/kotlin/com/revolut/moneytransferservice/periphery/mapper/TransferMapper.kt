@@ -11,7 +11,7 @@ object TransferMapper {
                 id = it.id,
                 originAccountId = it.originAccountId,
                 destinationAccountId = it.destinationAccountId,
-                amountInMinor = it.amountInMinor,
+                amountMinor = it.amountMinor,
                 dateCreated = it.dateCreated.toString()
             )
         }

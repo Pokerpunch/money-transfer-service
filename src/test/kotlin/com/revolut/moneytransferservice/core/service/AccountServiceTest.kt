@@ -25,8 +25,8 @@ class AccountServiceTest {
     fun `should return list of existing accounts when trying to get all accounts`() {
         // GIVEN some existing accounts
         val existingaccounts = listOf(
-            Account(id = 1).apply { balanceInMinor = 1001 },
-            Account(id = 2).apply { balanceInMinor = 2002 }
+            Account(id = 1).apply { balanceMinor = 1001 },
+            Account(id = 2).apply { balanceMinor = 2002 }
         )
         whenever(accountDAO.fetchAll()).thenReturn(existingaccounts)
 
@@ -56,7 +56,7 @@ class AccountServiceTest {
         val accountId = 101L
 
         // ... that corresponds to an existing account
-        val existingaccount = Account(id = 1).apply { balanceInMinor = 1001 }
+        val existingaccount = Account(id = 1).apply { balanceMinor = 1001 }
         whenever(accountDAO.findById(accountId)).thenReturn(existingaccount)
 
         // WHEN the try to fetch the account
@@ -86,9 +86,9 @@ class AccountServiceTest {
     @Test
     fun `should save account`() {
         // GIVEN an unpersisted account
-        val unpersistedAccount = Account(id = -1).apply { balanceInMinor = 1001 }
+        val unpersistedAccount = Account(id = -1).apply { balanceMinor = 1001 }
 
-        val persistedAccount = Account(id = 1).apply { balanceInMinor = 1001 }
+        val persistedAccount = Account(id = 1).apply { balanceMinor = 1001 }
         whenever(accountDAO.save(unpersistedAccount)).thenReturn(persistedAccount)
 
         // WHEN we try to save the account

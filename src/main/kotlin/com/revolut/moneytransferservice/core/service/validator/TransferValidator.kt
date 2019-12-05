@@ -5,18 +5,18 @@ import com.revolut.moneytransferservice.core.exception.TransferNotPossibleExcept
 
 object TransferValidator {
 
-    fun validateBeforeStartingTransfer(originAccountId: Long, destinationAccountId: Long, amountInMinor: Long) {
-        checkTransferAmountIsPositive(amountInMinor)
+    fun validateBeforeStartingTransfer(originAccountId: Long, destinationAccountId: Long, amountMinor: Long) {
+        checkTransferAmountIsPositive(amountMinor)
         checkOriginAndDestinationAccountsAreDifferent(originAccountId, destinationAccountId)
     }
 
-    fun validateBeforeFinishingTransfer(originAccount: Account, amountInMinor: Long) {
-        checkOriginAccountHasSufficientBalance(originAccount, amountInMinor)
+    fun validateBeforeFinishingTransfer(originAccount: Account, amountMinor: Long) {
+        checkOriginAccountHasSufficientBalance(originAccount, amountMinor)
     }
 
-    private fun checkTransferAmountIsPositive(amountInMinor: Long) {
-        if (amountInMinor <= 0) {
-            throw TransferNotPossibleException("Transfer amount: [$amountInMinor] is not positive")
+    private fun checkTransferAmountIsPositive(amountMinor: Long) {
+        if (amountMinor <= 0) {
+            throw TransferNotPossibleException("Transfer amount: [$amountMinor] is not positive")
         }
     }
 
@@ -26,10 +26,10 @@ object TransferValidator {
         }
     }
 
-    private fun checkOriginAccountHasSufficientBalance(originAccount: Account, amountInMinor: Long) {
-        if (originAccount.balanceInMinor < amountInMinor) {
+    private fun checkOriginAccountHasSufficientBalance(originAccount: Account, amountMinor: Long) {
+        if (originAccount.balanceMinor < amountMinor) {
             throw TransferNotPossibleException(
-                "Origin account [id=${originAccount}] has a balance: ${originAccount.balanceInMinor} that is less than the transfer amount: $amountInMinor"
+                "Origin account [id=${originAccount}] has a balance: ${originAccount.balanceMinor} that is less than the transfer amount: $amountMinor"
             )
         }
     }

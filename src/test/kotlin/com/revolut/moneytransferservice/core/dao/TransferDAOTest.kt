@@ -47,7 +47,7 @@ class TransferDAOTest {
         val transferId = 101L
 
         // ... that corresponds to an existing transfer
-        val existingTransfer = Transfer(id = transferId, originAccountId = 102, destinationAccountId = 103, amountInMinor = 104)
+        val existingTransfer = Transfer(id = transferId, originAccountId = 102, destinationAccountId = 103, amountMinor = 104)
         HibernateMockHelper.mockFindById(session, transferId, existingTransfer)
 
         // WHEN we try to find the transfer
@@ -76,9 +76,9 @@ class TransferDAOTest {
     fun `should return all existing transfers`() {
         // GIVEN several existing transfers
         val existingTransfers = listOf(
-            Transfer(id = 101, originAccountId = 102, destinationAccountId = 103, amountInMinor = 104),
-            Transfer(id = 201, originAccountId = 202, destinationAccountId = 203, amountInMinor = 204),
-            Transfer(id = 301, originAccountId = 302, destinationAccountId = 303, amountInMinor = 304)
+            Transfer(id = 101, originAccountId = 102, destinationAccountId = 103, amountMinor = 104),
+            Transfer(id = 201, originAccountId = 202, destinationAccountId = 203, amountMinor = 204),
+            Transfer(id = 301, originAccountId = 302, destinationAccountId = 303, amountMinor = 304)
         )
         HibernateMockHelper.mockFindAll(session, existingTransfers)
 
@@ -109,7 +109,7 @@ class TransferDAOTest {
         val destinationAccountId = 102L
         val transferAmount = 500L
         val transfer = Transfer(
-            originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmount
+            originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmount
         )
 
         // ... but no origin account
@@ -133,12 +133,12 @@ class TransferDAOTest {
         val destinationAccountId = 102L
         val transferAmount = 500L
         val transfer = Transfer(
-            originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmount
+            originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmount
         )
 
         // ... and an origin account with sufficient balance
         val initialBalanceOriginAccount = transferAmount + 1
-        val originAccount = Account(id = originAccountId).apply { balanceInMinor = initialBalanceOriginAccount }
+        val originAccount = Account(id = originAccountId).apply { balanceMinor = initialBalanceOriginAccount }
         whenever(accountDAO.findById(originAccountId, PESSIMISTIC_WRITE)).thenReturn(originAccount)
 
         // ... but no destination account
@@ -162,11 +162,11 @@ class TransferDAOTest {
         val destinationAccountId = 102L
         val transferAmount = 500L
         val transfer = Transfer(
-            originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmount
+            originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmount
         )
         // ... and an origin account with insufficient balance
         val initialBalanceOriginAccount = transferAmount - 1
-        val originAccount = Account(id = originAccountId).apply { balanceInMinor = initialBalanceOriginAccount }
+        val originAccount = Account(id = originAccountId).apply { balanceMinor = initialBalanceOriginAccount }
         whenever(accountDAO.findById(originAccountId, PESSIMISTIC_WRITE)).thenReturn(originAccount)
 
         // THEN an exception is thrown
@@ -186,22 +186,22 @@ class TransferDAOTest {
         val destinationAccountId = 102L
         val transferAmount = 500L
         val unpersistedTransfer = Transfer(
-            originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmount
+            originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmount
         )
 
         // ... an origin account with sufficient balance
         val initialBalanceOriginAccount = transferAmount + 1
-        val originAccount = Account(id = originAccountId).apply { balanceInMinor = initialBalanceOriginAccount }
+        val originAccount = Account(id = originAccountId).apply { balanceMinor = initialBalanceOriginAccount }
         whenever(accountDAO.findById(originAccountId, PESSIMISTIC_WRITE)).thenReturn(originAccount)
 
         // ... an existing destination account
         val initialBalanceDestinationAccount = 500L
-        val destinationAccount = Account(id = destinationAccountId).apply { balanceInMinor = initialBalanceDestinationAccount }
+        val destinationAccount = Account(id = destinationAccountId).apply { balanceMinor = initialBalanceDestinationAccount }
         whenever(accountDAO.findById(destinationAccountId, PESSIMISTIC_WRITE)).thenReturn(destinationAccount)
 
         // ... and the expected persisted transfer TODO
         val persistedTransfer = Transfer(
-            id = 1001, originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmount
+            id = 1001, originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmount
         )
         HibernateMockHelper.mockSave(session, unpersistedTransfer, persistedTransfer, persistedTransfer.id)
 
@@ -213,10 +213,10 @@ class TransferDAOTest {
         verify(accountDAO).update(destinationAccount)
 
         // ... the origin account had the transfer amount deducted
-        assertThat(originAccount.balanceInMinor).isEqualTo(initialBalanceOriginAccount - transferAmount)
+        assertThat(originAccount.balanceMinor).isEqualTo(initialBalanceOriginAccount - transferAmount)
 
         // ... the destination account had the transfer amount added
-        assertThat(originAccount.balanceInMinor).isEqualTo(initialBalanceOriginAccount - transferAmount)
+        assertThat(originAccount.balanceMinor).isEqualTo(initialBalanceOriginAccount - transferAmount)
 
         // ... and the persisted transfer record is returned
         assertThat(createdTransfer).isEqualTo(persistedTransfer)

@@ -26,8 +26,8 @@ class TransferServiceTest {
     fun `should return list of existing transfers when trying to get all transfers`() {
         // GIVEN some existing transfers
         val existingTransfers = listOf(
-            Transfer(originAccountId = 101, destinationAccountId = 102, amountInMinor = 103),
-            Transfer(originAccountId = 1001, destinationAccountId = 1002, amountInMinor = 1003)
+            Transfer(originAccountId = 101, destinationAccountId = 102, amountMinor = 103),
+            Transfer(originAccountId = 1001, destinationAccountId = 1002, amountMinor = 1003)
         )
         whenever(transferDAO.fetchAll()).thenReturn(existingTransfers)
 
@@ -41,7 +41,7 @@ class TransferServiceTest {
     @Test
     fun `should return empty list when trying to get all transfers and no transfers exist`() {
         // GIVEN no existing transfer
-        whenever(transferDAO.fetchAll()).thenReturn(emptyList<Transfer>())
+        whenever(transferDAO.fetchAll()).thenReturn(emptyList())
 
         // WHEN we try to fetch all existing transfers
         val allTransfers = transferService.getAllTransfers()
@@ -56,7 +56,7 @@ class TransferServiceTest {
         val transferId = 101L
 
         // ... that corresponds to an existing transfer
-        val existingTransfer = Transfer(originAccountId = 101, destinationAccountId = 102, amountInMinor = 103)
+        val existingTransfer = Transfer(originAccountId = 101, destinationAccountId = 102, amountMinor = 103)
         whenever(transferDAO.findById(transferId)).thenReturn(existingTransfer)
 
         // WHEN the try to get the transfer
@@ -89,16 +89,16 @@ class TransferServiceTest {
         val destinationAccountId = 102L
 
         // ... a positive transfer amount
-        val transferAmountInMinor = 500L
+        val transferAmountMinor = 500L
 
         // ... and an expected transfer
-        val unpersistedTransfer = Transfer(id = -1, originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmountInMinor)
-        val persistedTransfer = Transfer(id = 1, originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmountInMinor)
+        val unpersistedTransfer = Transfer(id = -1, originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmountMinor)
+        val persistedTransfer = Transfer(id = 1, originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmountMinor)
         whenever(transferDAO.updateAccountsAndSaveTransfer(unpersistedTransfer)).thenReturn(persistedTransfer)
 
         // WHEN we try to initiate the transfer
         val transfer = transferService.executeTransfer(
-            originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmountInMinor
+            originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmountMinor
         )
 
         // THEN the saved transfer is returned
@@ -112,14 +112,14 @@ class TransferServiceTest {
         val destinationAccountId = originAccountId
 
         // ... and a positive transfer amount
-        val transferAmountInMinor = 500L
+        val transferAmountMinor = 500L
 
         // THEN an exception is thrown
         assertThatExceptionOfType(TransferNotPossibleException::class.java).isThrownBy {
 
             // WHEN we try to initiate the transfer
             transferService.executeTransfer(
-                originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmountInMinor
+                originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmountMinor
             )
         }
     }
@@ -131,14 +131,14 @@ class TransferServiceTest {
         val destinationAccountId = 102L
 
         // ... and a negative transfer amount
-        val transferAmountInMinor = -1L
+        val transferAmountMinor = -1L
 
         // THEN an exception is thrown
         assertThatExceptionOfType(TransferNotPossibleException::class.java).isThrownBy {
 
             // WHEN we try to initiate the transfer
             transferService.executeTransfer(
-                originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmountInMinor
+                originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmountMinor
             )
         }
     }
@@ -150,14 +150,14 @@ class TransferServiceTest {
         val destinationAccountId = 102L
 
         // ... and a zero transfer amount
-        val transferAmountInMinor = 0L
+        val transferAmountMinor = 0L
 
         // THEN an exception is thrown
         assertThatExceptionOfType(TransferNotPossibleException::class.java).isThrownBy {
 
             // WHEN we try to initiate the transfer
             transferService.executeTransfer(
-                originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmountInMinor
+                originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountMinor = transferAmountMinor
             )
         }
     }

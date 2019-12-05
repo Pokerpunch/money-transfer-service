@@ -13,7 +13,7 @@ class TransferMapperTest {
             id = 101,
             originAccountId = 1001,
             destinationAccountId = 1003,
-            amountInMinor = 500
+            amountMinor = 500
         )
 
         // WHEN
@@ -24,7 +24,7 @@ class TransferMapperTest {
            assertThat(id).isEqualTo(transfer.id)
            assertThat(originAccountId).isEqualTo(transfer.originAccountId)
            assertThat(destinationAccountId).isEqualTo(transfer.destinationAccountId)
-           assertThat(amountInMinor).isEqualTo(transfer.amountInMinor)
+           assertThat(amountMinor).isEqualTo(transfer.amountMinor)
            assertThat(dateCreated).isEqualTo(transfer.dateCreated.toString())
         }
     }

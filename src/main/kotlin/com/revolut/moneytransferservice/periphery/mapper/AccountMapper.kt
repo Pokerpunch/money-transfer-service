@@ -8,7 +8,7 @@ object AccountMapper {
 
     fun mapToAccountEntity(accountCreationRequest: AccountCreationRequest): Account =
         Account(accountOwnerId = accountCreationRequest.accountOwnerId).apply {
-            balanceInMinor = accountCreationRequest.initialBalanceInMinor
+            balanceMinor = accountCreationRequest.balanceMinor
         }
 
     fun mapToAccountDetails(account: Account): AccountDetails =
@@ -16,7 +16,7 @@ object AccountMapper {
             AccountDetails(
                 id = it.id,
                 accountOwnerId = it.accountOwnerId,
-                balanceInMinor = it.balanceInMinor,
+                balanceMinor = it.balanceMinor,
                 dateCreated = it.dateCreated.toString(),
                 dateUpdated = it.dateUpdated.toString()
             )

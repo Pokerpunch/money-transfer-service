@@ -28,7 +28,7 @@ data class Transfer(
     val destinationAccountId: Long = -1,
 
     @Column(nullable = false)
-    val amountInMinor: Long = -1
+    val amountMinor: Long = -1
 ) {
     @Column(nullable = false, updatable = false)
     @field: CreationTimestamp

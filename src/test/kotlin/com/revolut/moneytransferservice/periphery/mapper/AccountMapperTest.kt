@@ -10,20 +10,20 @@ class AccountMapperTest {
     @Test
     fun `should map to account entity`() {
         // GIVEN
-        val accountCreationRequest = AccountCreationRequest(accountOwnerId = 101, initialBalanceInMinor = 200)
+        val accountCreationRequest = AccountCreationRequest(accountOwnerId = 101, balanceMinor = 200)
 
         // WHEN
         val accountEntity = AccountMapper.mapToAccountEntity(accountCreationRequest)
 
         // THEN
         assertThat(accountEntity.accountOwnerId).isEqualTo(accountCreationRequest.accountOwnerId)
-        assertThat(accountEntity.balanceInMinor).isEqualTo(accountCreationRequest.initialBalanceInMinor)
+        assertThat(accountEntity.balanceMinor).isEqualTo(accountCreationRequest.balanceMinor)
     }
 
     @Test
     fun `should map to account details`() {
         // GIVEN
-        val accountEntity = Account(id = 101, accountOwnerId = 102).apply { balanceInMinor = 103 }
+        val accountEntity = Account(id = 101, accountOwnerId = 102).apply { balanceMinor = 103 }
 
         // WHEN
         val accountDetails = AccountMapper.mapToAccountDetails(accountEntity)

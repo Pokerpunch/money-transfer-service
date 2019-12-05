@@ -31,7 +31,7 @@ data class Account(
     val accountOwnerId: Long = -1
 ) {
     @Column(nullable = false, updatable = true)
-    var balanceInMinor: Long = 0
+    var balanceMinor: Long = 0
 
     @Column(nullable = false, updatable = false)
     @field: CreationTimestamp
