@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import com.revolut.moneytransferservice.core.exception.BadRequestException
+import com.revolut.moneytransferservice.core.exception.NotFoundException
 import com.revolut.moneytransferservice.periphery.dto.UserCreationRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -60,7 +61,7 @@ class RequestParserTest {
             RequestParser.getRequestParameter<Long>(request, parameterName)
 
             // THEN
-        }.isInstanceOf(BadRequestException::class.java)
+        }.isInstanceOf(NotFoundException::class.java)
     }
 
     @Test
