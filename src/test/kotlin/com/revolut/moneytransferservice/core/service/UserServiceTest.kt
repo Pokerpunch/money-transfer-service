@@ -88,12 +88,15 @@ class UserServiceTest {
     @Test
     fun `should create user`() {
         // GIVEN an unpersisted user
-        val userToSave = User(firstName = "Amy", lastName = "Adams")
+        val unpersistedUser = User(id = -1, firstName = "Amy", lastName = "Adams")
+
+        val persistedUser = User(id = 1, firstName = "Amy", lastName = "Adams")
+        whenever(userDAO.save(unpersistedUser)).thenReturn(persistedUser)
 
         // WHEN we try to create the user
-        userService.create(userToSave)
+        val createdUser = userService.create(unpersistedUser)
 
-        // THEN the user is saved
-        verify(userDAO).save(userToSave)
+        // THEN the saved user is returned
+        assertThat(createdUser).isEqualTo(persistedUser)
     }
 }

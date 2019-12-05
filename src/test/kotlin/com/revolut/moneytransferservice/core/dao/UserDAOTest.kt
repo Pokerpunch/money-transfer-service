@@ -1,6 +1,5 @@
 package com.revolut.moneyuserservice.core.dao
 
-import com.nhaarman.mockito_kotlin.verify
 import com.revolut.moneytransferservice.core.dao.UserDAO
 import com.revolut.moneytransferservice.core.dao.util.HibernateMockHelper
 import com.revolut.moneytransferservice.core.domain.User
@@ -97,12 +96,16 @@ class UserDAOTest {
     @Test
     fun `should save new user`() {
         // GIVEN an unpersisted user
-        val unpersistedUser = User(id = 101, firstName = "Amy", lastName = "Adams")
+        val unpersistedUser = User(id = -1, firstName = "Amy", lastName = "Adams")
+
+        // ... and an expected persisted user
+        val persistedUser = User(id = 1, firstName = "Amy", lastName = "Adams")
+        HibernateMockHelper.mockSave(session, unpersistedUser, persistedUser, persistedUser.id)
 
         // WHEN we try to save the user
-        userDAO.save(unpersistedUser)
+        val createdUser = userDAO.save(unpersistedUser)
 
-        // THEN the user is saved
-        verify(session).save(unpersistedUser)
+        // THEN the persisted user is returned
+        assertThat(createdUser).isEqualTo(persistedUser)
     }
 }

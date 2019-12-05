@@ -13,7 +13,6 @@ class UserService(
     fun getUser(id: Long): User =
         userDAO.findById(id) ?: throw NotFoundException("User with ID: $id not found")
 
-    fun create(user: User) {
+    fun create(user: User): User =
         userDAO.save(user)
-    }
 }

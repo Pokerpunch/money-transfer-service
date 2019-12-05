@@ -185,7 +185,7 @@ class TransferDAOTest {
         val originAccountId = 101L
         val destinationAccountId = 102L
         val transferAmount = 500L
-        val transfer = Transfer(
+        val unpersistedTransfer = Transfer(
             originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmount
         )
 
@@ -194,13 +194,19 @@ class TransferDAOTest {
         val originAccount = Account(id = originAccountId).apply { balanceInMinor = initialBalanceOriginAccount }
         whenever(accountDAO.findById(originAccountId, PESSIMISTIC_WRITE)).thenReturn(originAccount)
 
-        // ... and an existing destination account
+        // ... an existing destination account
         val initialBalanceDestinationAccount = 500L
         val destinationAccount = Account(id = destinationAccountId).apply { balanceInMinor = initialBalanceDestinationAccount }
         whenever(accountDAO.findById(destinationAccountId, PESSIMISTIC_WRITE)).thenReturn(destinationAccount)
 
+        // ... and the expected persisted transfer TODO
+        val persistedTransfer = Transfer(
+            id = 1001, originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmount
+        )
+        HibernateMockHelper.mockSave(session, unpersistedTransfer, persistedTransfer, persistedTransfer.id)
+
         // WHEN a transfer is made
-        transferDAO.updateAccountsAndSaveTransfer(transfer)
+        val createdTransfer = transferDAO.updateAccountsAndSaveTransfer(unpersistedTransfer)
 
         // THEN both accounts are updated
         verify(accountDAO).update(originAccount)
@@ -212,7 +218,7 @@ class TransferDAOTest {
         // ... the destination account had the transfer amount added
         assertThat(originAccount.balanceInMinor).isEqualTo(initialBalanceOriginAccount - transferAmount)
 
-        // ... and the transfer record is saved
-        verify(session).save(transfer)
+        // ... and the persisted transfer record is returned
+        assertThat(createdTransfer).isEqualTo(persistedTransfer)
     }
 }

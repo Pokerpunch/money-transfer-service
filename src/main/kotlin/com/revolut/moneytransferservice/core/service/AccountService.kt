@@ -13,7 +13,6 @@ class AccountService(
     fun getAccount(id: Long): Account =
         accountDAO.findById(id) ?: throw NotFoundException("Account with ID: $id not found")
 
-    fun create(account: Account) {
+    fun create(account: Account): Account =
         accountDAO.save(account)
-    }
 }

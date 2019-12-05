@@ -1,7 +1,5 @@
 package com.revolut.moneytransferservice.core.service
 
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.revolut.moneytransferservice.core.dao.TransferDAO
 import com.revolut.moneytransferservice.core.domain.Transfer
@@ -90,24 +88,21 @@ class TransferServiceTest {
         val originAccountId = 101L
         val destinationAccountId = 102L
 
-        // ... and a positive transfer amount
+        // ... a positive transfer amount
         val transferAmountInMinor = 500L
 
+        // ... and an expected transfer
+        val unpersistedTransfer = Transfer(id = -1, originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmountInMinor)
+        val persistedTransfer = Transfer(id = 1, originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmountInMinor)
+        whenever(transferDAO.updateAccountsAndSaveTransfer(unpersistedTransfer)).thenReturn(persistedTransfer)
+
         // WHEN we try to initiate the transfer
-        transferService.executeTransfer(
+        val transfer = transferService.executeTransfer(
             originAccountId = originAccountId, destinationAccountId = destinationAccountId, amountInMinor = transferAmountInMinor
         )
 
-        // THEN the transfer is initiated as expected
-        val transferArgumentCaptor = argumentCaptor<Transfer>()
-        verify(transferDAO).updateAccountsAndSaveTransfer(transferArgumentCaptor.capture())
-
-        // ... and has the expected values
-        with(transferArgumentCaptor.firstValue) {
-            assertThat(this.originAccountId).isEqualTo(originAccountId)
-            assertThat(this.destinationAccountId).isEqualTo(destinationAccountId)
-            assertThat(this.amountInMinor).isEqualTo(amountInMinor)
-        }
+        // THEN the saved transfer is returned
+        assertThat(transfer).isEqualTo(persistedTransfer)
     }
 
     @Test

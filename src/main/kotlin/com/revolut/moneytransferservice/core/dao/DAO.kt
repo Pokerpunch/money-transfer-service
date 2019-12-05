@@ -6,5 +6,5 @@ interface DAO<T, in ID : java.io.Serializable> {
 
     fun fetchAll(): List<T>
 
-    fun save(entity: T)
+    fun save(entity: T): T
 }

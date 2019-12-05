@@ -48,4 +48,9 @@ object HibernateMockHelper {
         whenever(session.createQuery(criteriaQuery)).thenReturn(query)
         whenever(query.resultList).thenReturn(returnValues)
     }
+
+    inline fun <reified T> mockSave(session: Session, unpersistedEntity: T, persistedEntity: T, id: Long) {
+        whenever(session.save(unpersistedEntity)).thenReturn(id)
+        mockFindById(session, id, persistedEntity)
+    }
  }

@@ -23,11 +23,11 @@ abstract class HibernateDAO<T, in ID : java.io.Serializable>(
             session.createQuery(criteria).resultList
         }
 
-    override fun save(entity: T) {
+    override fun save(entity: T): T =
         runInTransaction {
-            getCurrentSession().save(entity)
+            val id: ID = getCurrentSession().save(entity) as ID
+            findById(id)!!
         }
-    }
 
     protected fun getCurrentSession(): Session = sessionFactory.currentSession
 

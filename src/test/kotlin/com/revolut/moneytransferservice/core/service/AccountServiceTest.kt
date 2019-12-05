@@ -1,6 +1,5 @@
 package com.revolut.moneytransferservice.core.service
 
-import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.revolut.moneytransferservice.core.dao.AccountDAO
 import com.revolut.moneytransferservice.core.domain.Account
@@ -87,12 +86,15 @@ class AccountServiceTest {
     @Test
     fun `should save account`() {
         // GIVEN an unpersisted account
-        val accountToSave = Account().apply { balanceInMinor = 1001 }
+        val unpersistedAccount = Account(id = -1).apply { balanceInMinor = 1001 }
+
+        val persistedAccount = Account(id = 1).apply { balanceInMinor = 1001 }
+        whenever(accountDAO.save(unpersistedAccount)).thenReturn(persistedAccount)
 
         // WHEN we try to save the account
-        accountService.create(accountToSave)
+        val createdAccount = accountService.create(unpersistedAccount)
 
-        // THEN the account is saved
-        verify(accountDAO).save(accountToSave)
+        // THEN the saved account is returned
+        assertThat(createdAccount).isEqualTo(persistedAccount)
     }
 }

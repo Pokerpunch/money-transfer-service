@@ -10,7 +10,7 @@ class TransferDAO(
     private val accountDAO: AccountDAO
 ) : HibernateDAO<Transfer, Long>(Transfer::class.java, sessionFactory) {
 
-    fun updateAccountsAndSaveTransfer(transfer: Transfer) {
+    fun updateAccountsAndSaveTransfer(transfer: Transfer): Transfer =
         runInTransaction {
 
             println("DEBUG - Fetching originAccount")
@@ -32,5 +32,4 @@ class TransferDAO(
 
             save(transfer)
         }
-    }
 }
