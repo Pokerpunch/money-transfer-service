@@ -28,3 +28,39 @@ VALUES
  'Chaplin',
  parsedatetime('01-01-2000 00:00:03.000', 'dd-MM-yyyy hh:mm:ss.SSS')
 );
+
+-- Account 1
+INSERT INTO `accounts`
+(`id`, `version`, `accountOwnerId`, `balanceMinor`, `dateCreated`, `dateUpdated`)
+VALUES
+(`account_sequence`.nextval,
+ 0,
+ 1,
+ 100,
+ parsedatetime('01-01-2000 00:00:01.000', 'dd-MM-yyyy hh:mm:ss.SSS'),
+ parsedatetime('01-01-2000 00:00:01.000', 'dd-MM-yyyy hh:mm:ss.SSS')
+);
+
+-- Account 2
+INSERT INTO `accounts`
+(`id`, `version`, `accountOwnerId`, `balanceMinor`, `dateCreated`, `dateUpdated`)
+VALUES
+(`account_sequence`.nextval,
+ 0,
+ 2,
+ 200,
+ parsedatetime('01-01-2000 00:00:01.000', 'dd-MM-yyyy hh:mm:ss.SSS'),
+ parsedatetime('01-01-2000 00:00:01.000', 'dd-MM-yyyy hh:mm:ss.SSS')
+);
+
+-- Account 3
+INSERT INTO `accounts`
+(`id`, `version`, `accountOwnerId`, `balanceMinor`, `dateCreated`, `dateUpdated`)
+VALUES
+(`account_sequence`.nextval,
+ 0,
+ 3,
+ -300,
+ parsedatetime('01-01-2000 00:00:03.000', 'dd-MM-yyyy hh:mm:ss.SSS'),
+ parsedatetime('01-01-2000 00:00:03.000', 'dd-MM-yyyy hh:mm:ss.SSS')
+);
