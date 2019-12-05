@@ -7,7 +7,9 @@ import com.revolut.moneytransferservice.periphery.dto.AccountDetails
 object AccountMapper {
 
     fun mapToAccountEntity(accountCreationRequest: AccountCreationRequest): Account =
-        Account(accountOwnerId = accountCreationRequest.accountOwnerId)
+        Account(accountOwnerId = accountCreationRequest.accountOwnerId).apply {
+            balanceInMinor = accountCreationRequest.initialBalanceInMinor
+        }
 
     fun mapToAccountDetails(account: Account): AccountDetails =
         account.let {
