@@ -64,3 +64,25 @@ VALUES
  parsedatetime('01-01-2000 00:00:03.000', 'dd-MM-yyyy hh:mm:ss.SSS'),
  parsedatetime('01-01-2000 00:00:03.000', 'dd-MM-yyyy hh:mm:ss.SSS')
 );
+
+-- Transfer 1
+INSERT INTO `transfers`
+(`id`, `originAccountId`, `destinationAccountId`, `amountMinor`, `dateCreated`)
+VALUES
+(`transfer_sequence`.nextval,
+ 3,
+ 1,
+ 100,
+ parsedatetime('01-01-2000 00:00:01.000', 'dd-MM-yyyy hh:mm:ss.SSS')
+);
+
+-- Transfer 2
+INSERT INTO `transfers`
+(`id`, `originAccountId`, `destinationAccountId`, `amountMinor`, `dateCreated`)
+VALUES
+(`transfer_sequence`.nextval,
+ 3,
+ 2,
+ 200,
+ parsedatetime('01-01-2000 00:00:02.000', 'dd-MM-yyyy hh:mm:ss.SSS')
+);
