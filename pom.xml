@@ -120,12 +120,11 @@
             <artifactId>javax.ws.rs-api</artifactId>
             <version>2.1.1</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.jetbrains.kotlin</groupId>-->
-<!--            <artifactId>kotlin-test</artifactId>-->
-<!--            <version>${kotlin.version}</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
 
 
     </dependencies>
@@ -159,12 +158,15 @@
                 </configuration>
             </plugin>
 
-            <!-- Run tests -->
+            <!-- Run unit tests -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M3</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
+                    <excludes>
+                        <exclude>**/*IntegrationTest.class</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -178,6 +180,28 @@
                                 <include>**/*Test.class</include>
                             </includes>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--  Run integration tests  -->
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <includes>
+                        <include>**/*IntegrationTest.class</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

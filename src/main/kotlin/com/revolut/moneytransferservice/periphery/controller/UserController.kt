@@ -2,10 +2,9 @@ package com.revolut.moneytransferservice.periphery.controller
 
 import com.google.gson.Gson
 import com.revolut.moneytransferservice.core.service.UserService
-import com.revolut.moneytransferservice.periphery.dto.ResponseMessage
 import com.revolut.moneytransferservice.periphery.dto.UserCreationRequest
 import com.revolut.moneytransferservice.periphery.dto.UserDetails
-import com.revolut.moneytransferservice.periphery.mapper.UserMapper.mapToUnpersistedEntity
+import com.revolut.moneytransferservice.periphery.mapper.UserMapper.mapToUnpersistedUserEntity
 import com.revolut.moneytransferservice.periphery.mapper.UserMapper.mapToUserDetails
 import com.revolut.moneytransferservice.util.RequestParser.getBody
 import com.revolut.moneytransferservice.util.RequestParser.getRequestParameter
@@ -27,10 +26,10 @@ class UserController(
     }
 
     private fun initialiseRoutes() {
-        path("api/v1/users") {
-            get("/", ::getAllUsers, gson::toJson)
+        path("api/users") {
+            get("", ::getAllUsers, gson::toJson)
             get("/:id", ::getUser, gson::toJson)
-            post("/", APPLICATION_JSON, ::createUser, gson::toJson)
+            post("", APPLICATION_JSON, ::createUser, gson::toJson)
         }
     }
 
@@ -42,7 +41,7 @@ class UserController(
         }.map {
             mapToUserDetails(it)
         }.also {
-            println("Processed request to get all users with response: $it")
+            println("Returning response: $it")
         }
 
     private fun getUser(request: Request, response: Response): UserDetails {
@@ -55,24 +54,25 @@ class UserController(
         }.let {
             mapToUserDetails(it)
         }.also {
-            println("Processed request to get user by ID: [$userId] with response: $it")
+            println("Returning response: $it")
         }
     }
 
-    private fun createUser(request: Request, response: Response): ResponseMessage {
+    private fun createUser(request: Request, response: Response): UserDetails {
         val userCreationRequest: UserCreationRequest = getBody(request, gson)
 
         return userCreationRequest.also {
-            println("Received request to create $it")
-        }.let { mapToUnpersistedEntity(it) }
-            .run {
+            println("Received: $it")
+        }.let {
+            mapToUnpersistedUserEntity(it)
+        }.run {
             userService.create(this)
         }.let {
-            ResponseMessage(success = true)
+            mapToUserDetails(it)
         }.also {
             response.status(SC_CREATED)
         }.also {
-            println("Processed request to create $userCreationRequest with response: $it")
+            println("Returning response: $it")
         }
     }
 }

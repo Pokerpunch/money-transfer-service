@@ -33,7 +33,7 @@ class UserMapperTest {
         )
 
         // WHEN
-        val userEntity = UserMapper.mapToUnpersistedEntity(userDetails)
+        val userEntity = UserMapper.mapToUnpersistedUserEntity(userDetails)
 
         // THEN
         with(userEntity) {

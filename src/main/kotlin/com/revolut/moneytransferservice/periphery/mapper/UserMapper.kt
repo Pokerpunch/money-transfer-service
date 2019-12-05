@@ -16,7 +16,7 @@ object UserMapper {
             )
         }
 
-    fun mapToUnpersistedEntity(userCreationRequest: UserCreationRequest): User =
+    fun mapToUnpersistedUserEntity(userCreationRequest: UserCreationRequest): User =
         userCreationRequest.let {
             User(
                 firstName = it.firstName,

@@ -18,12 +18,16 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
 class Application
 
-fun main (args: Array<String>) {
-    port(8080)
+const val DEFAULT_PORT = 8080
 
+fun main (args: Array<String>) {
+    startApplication()
+}
+
+fun startApplication(port: Int = DEFAULT_PORT) {
+    port(port)
     setup()
     registerResponseFilter()
-
     println("Application started...")
 }
 
