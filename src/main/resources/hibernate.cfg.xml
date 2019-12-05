@@ -20,6 +20,8 @@
 
         <mapping package="com.revolut.moneytransferservice.core.domain"/>
         <mapping class="com.revolut.moneytransferservice.core.domain.User"/>
+        <mapping class="com.revolut.moneytransferservice.core.domain.Account"/>
+        <mapping class="com.revolut.moneytransferservice.core.domain.Transfer"/>
     </session-factory>
 
 </hibernate-configuration>
