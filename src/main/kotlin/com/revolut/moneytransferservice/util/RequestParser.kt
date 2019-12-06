@@ -11,7 +11,9 @@ object RequestParser {
         request.params(parameterName).let { param ->
             when {
                 param == null -> throw NotFoundException("Request does not contain parameter $parameterName")
-                T::class == Long::class -> { param.toLong() as T }
+                T::class == Long::class -> {
+                    runCatching { param.toLong() as T }.getOrElse { throw BadRequestException("Request parameter [$parameterName] is invalid") }
+                }
                 else -> throw UnsupportedOperationException("Parsing of request parameters of type ${T::class.simpleName} is not supported")
             }
         }
@@ -20,7 +22,6 @@ object RequestParser {
         try {
             gson.fromJson(request.body(), T::class.java)
         } catch (e: Exception) {
-            e.printStackTrace() // TODO
             throw BadRequestException("Invalid request body")
         }
 }
