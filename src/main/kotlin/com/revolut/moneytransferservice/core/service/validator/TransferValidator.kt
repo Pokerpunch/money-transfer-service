@@ -29,7 +29,7 @@ object TransferValidator {
     private fun checkOriginAccountHasSufficientBalance(originAccount: Account, amountMinor: Long) {
         if (originAccount.balanceMinor < amountMinor) {
             throw TransferNotPossibleException(
-                "Origin account [id=${originAccount}] has a balance: ${originAccount.balanceMinor} that is less than the transfer amount: $amountMinor"
+                "Origin account [id=${originAccount.id}] has a balance: ${originAccount.balanceMinor} that is less than the transfer amount: $amountMinor"
             )
         }
     }

@@ -7,6 +7,7 @@ import com.revolut.moneytransferservice.periphery.dto.AccountDetails
 import com.revolut.moneytransferservice.periphery.mapper.AccountMapper
 import com.revolut.moneytransferservice.periphery.mapper.AccountMapper.mapToAccountDetails
 import com.revolut.moneytransferservice.util.RequestParser
+import org.apache.log4j.Logger
 import spark.Request
 import spark.Response
 import spark.Spark
@@ -17,6 +18,10 @@ class AccountController(
     private val accountService: AccountService,
     private val gson: Gson
 ) {
+    companion object {
+        val logger: Logger = Logger.getLogger(AccountController::class.java)
+    }
+
     init {
         initialiseRoutes()
     }
@@ -31,26 +36,26 @@ class AccountController(
 
     private fun getAllAccounts(request: Request, response: Response): List<AccountDetails> =
         also {
-            println("Received request to get all accounts")
+            logger.debug("Received request to get all accounts")
         }.run {
             accountService.getAllAccounts()
         }.map {
             mapToAccountDetails(it)
         }.also {
-            println("Returning response: $it")
+            logger.debug("Returning response: $it")
         }
 
     private fun getAccount(request: Request, response: Response): AccountDetails {
         val accountId: Long = RequestParser.getRequestParameter(request = request, parameterName = "id")
 
         return also {
-            println("Received request to get account with ID: $accountId")
+            logger.debug("Received request to get account with ID: $accountId")
         }.run {
             accountService.getAccount(accountId)
         }.let {
             mapToAccountDetails(it)
         }.also {
-            println("Returning response: $it")
+            logger.debug("Returning response: $it")
         }
     }
 
@@ -58,7 +63,7 @@ class AccountController(
         val accountCreationRequest: AccountCreationRequest = RequestParser.getBody(request, gson)
 
         return accountCreationRequest.also {
-            println("Received: $it")
+            logger.debug("Received: $it")
         }.let {
             AccountMapper.mapToAccountEntity(it)
         }.run {
@@ -68,7 +73,7 @@ class AccountController(
         }.also {
             response.status(HttpServletResponse.SC_CREATED)
         }.also {
-            println("Returning response: $it")
+            logger.debug("Returning response: $it")
         }
     }
 }

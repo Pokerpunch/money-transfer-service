@@ -11,6 +11,7 @@ import com.revolut.moneytransferservice.periphery.controller.AccountController
 import com.revolut.moneytransferservice.periphery.controller.ErrorHandler
 import com.revolut.moneytransferservice.periphery.controller.TransferController
 import com.revolut.moneytransferservice.periphery.controller.UserController
+import org.apache.log4j.Logger
 import org.hibernate.cfg.Configuration
 import spark.Spark.afterAfter
 import spark.Spark.port
@@ -20,6 +21,8 @@ class Application
 
 const val DEFAULT_PORT = 8080
 
+val logger: Logger = Logger.getLogger(Application::class.java)
+
 fun main (args: Array<String>) {
     startApplication()
 }
@@ -28,7 +31,8 @@ fun startApplication(port: Int = DEFAULT_PORT) {
     port(port)
     setup()
     registerResponseFilter()
-    println("Application started...")
+
+    logger.info("Application started...")
 }
 
 private fun setup() {

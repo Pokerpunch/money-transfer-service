@@ -8,6 +8,7 @@ import com.revolut.moneytransferservice.periphery.mapper.UserMapper.mapToUnpersi
 import com.revolut.moneytransferservice.periphery.mapper.UserMapper.mapToUserDetails
 import com.revolut.moneytransferservice.util.RequestParser.getBody
 import com.revolut.moneytransferservice.util.RequestParser.getRequestParameter
+import org.apache.log4j.Logger
 import spark.Request
 import spark.Response
 import spark.Spark.get
@@ -21,6 +22,10 @@ class UserController(
     private val gson: Gson
 
 ) {
+    companion object {
+        val logger: Logger = Logger.getLogger(UserController::class.java)
+    }
+
     init {
         initialiseRoutes()
     }
@@ -35,26 +40,26 @@ class UserController(
 
     private fun getAllUsers(request: Request, response: Response): List<UserDetails> =
         also {
-            println("Received request to get all users")
+            logger.debug("Received request to get all users")
         }.run {
             userService.getAllUsers()
         }.map {
             mapToUserDetails(it)
         }.also {
-            println("Returning response: $it")
+            logger.debug("Returning response: $it")
         }
 
     private fun getUser(request: Request, response: Response): UserDetails {
         val userId: Long = getRequestParameter(request = request, parameterName = "id")
 
         return also {
-            println("Received request to get user with ID: $userId")
+            logger.debug("Received request to get user with ID: $userId")
         }.run {
             userService.getUser(userId)
         }.let {
             mapToUserDetails(it)
         }.also {
-            println("Returning response: $it")
+            logger.debug("Returning response: $it")
         }
     }
 
@@ -62,7 +67,7 @@ class UserController(
         val userCreationRequest: UserCreationRequest = getBody(request, gson)
 
         return userCreationRequest.also {
-            println("Received: $it")
+            logger.debug("Received: $it")
         }.let {
             mapToUnpersistedUserEntity(it)
         }.run {
@@ -72,7 +77,7 @@ class UserController(
         }.also {
             response.status(SC_CREATED)
         }.also {
-            println("Returning response: $it")
+            logger.debug("Returning response: $it")
         }
     }
 }

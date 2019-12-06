@@ -12,17 +12,11 @@ class TransferDAO(
 
     fun updateAccountsAndSaveTransfer(transfer: Transfer): Transfer =
         runInTransaction {
-
-            println("DEBUG - Fetching originAccount")
             val originAccount = accountDAO.findById(transfer.originAccountId, PESSIMISTIC_WRITE)
-            println("DEBUG - Fetched originAccount: $originAccount")
 
-            println("DEBUG - validateBeforeFinishingTransfer")
             TransferValidator.validateBeforeFinishingTransfer(originAccount, transfer.amountMinor)
 
-            println("DEBUG - Fetching destination Account")
             val destinationAccount = accountDAO.findById(transfer.destinationAccountId, PESSIMISTIC_WRITE)
-            println("DEBUG - Fetched destination Account")
 
             originAccount.balanceMinor -= transfer.amountMinor
             destinationAccount.balanceMinor += transfer.amountMinor

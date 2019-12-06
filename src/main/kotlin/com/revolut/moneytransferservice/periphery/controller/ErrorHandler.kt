@@ -2,9 +2,10 @@ package com.revolut.moneytransferservice.periphery.controller
 
 import com.google.gson.Gson
 import com.revolut.moneytransferservice.core.exception.BadRequestException
-import com.revolut.moneytransferservice.core.exception.TransferNotPossibleException
 import com.revolut.moneytransferservice.core.exception.NotFoundException
+import com.revolut.moneytransferservice.core.exception.TransferNotPossibleException
 import com.revolut.moneytransferservice.periphery.dto.ResponseMessage
+import org.apache.log4j.Logger
 import spark.Request
 import spark.Response
 import spark.Spark.exception
@@ -18,6 +19,10 @@ import javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED
 class ErrorHandler(
     private val gson: Gson
 ) {
+    companion object {
+        val logger: Logger = Logger.getLogger(ErrorHandler::class.java)
+    }
+
     init {
         initializeExceptionMappings()
     }
@@ -32,35 +37,49 @@ class ErrorHandler(
     }
 
     private fun handleNotFoundException(exception: NotFoundException, request: Request, response: Response) {
+        logger.error("Caught exception: ", exception)
+
         writeErrorResponse(exception.message, response).also {
             response.status(SC_NOT_FOUND)
         }
     }
 
     private fun handleNotFoundException(request: Request, response: Response) =
-        writeErrorResponse("Not Found", response).also {
-            response.status(SC_NOT_FOUND)
+        also {
+            logger.error("Caught a Not Found exception")
+        }.let {
+            writeErrorResponse("Not Found", response).also {
+                response.status(SC_NOT_FOUND)
+            }
         }
 
     private fun handleBadRequestException(exception: BadRequestException, request: Request, response: Response) {
+        logger.error("Caught exception: ", exception)
+
         writeErrorResponse(exception.message, response).also {
             response.status(SC_BAD_REQUEST)
         }
     }
 
     private fun handleTransferNotPossibleException(exception: TransferNotPossibleException, request: Request, response: Response) {
+        logger.error("Caught exception: ", exception)
+
         writeErrorResponse(exception.message, response).also {
             response.status(SC_PRECONDITION_FAILED)
         }
     }
 
     private fun handleUnsupportedOperationException(exception: UnsupportedOperationException, request: Request, response: Response) {
+        logger.error("Caught exception: ", exception)
+
         writeErrorResponse(exception.message, response).also {
             response.status(SC_NOT_IMPLEMENTED)
         }
     }
 
     private fun handleAnyException(exception: Exception, request: Request, response: Response) {
+        logger.error("Caught exception: ", exception)
+
         writeErrorResponse(exception.message, response).also {
             response.status(SC_INTERNAL_SERVER_ERROR)
         }
@@ -74,5 +93,7 @@ class ErrorHandler(
             gson.toJson(it)
         }.also {
             response.body(it)
+        }.also {
+            logger.debug("Returning $it")
         }
 }

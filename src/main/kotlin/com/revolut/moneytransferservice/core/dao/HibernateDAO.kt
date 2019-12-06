@@ -2,7 +2,6 @@ package com.revolut.moneytransferservice.core.dao
 
 import org.hibernate.Session
 import org.hibernate.SessionFactory
-import java.lang.IllegalStateException
 
 abstract class HibernateDAO<T, in ID : java.io.Serializable>(
     private val entityType: Class<T>,
@@ -32,9 +31,7 @@ abstract class HibernateDAO<T, in ID : java.io.Serializable>(
     protected fun getCurrentSession(): Session = sessionFactory.currentSession
 
     protected fun <T> runInTransaction(body: () -> T): T =
-        also {
-            println("DEBUG - runInTransaction")
-        }.getCurrentSession().let { session ->
+        getCurrentSession().let { session ->
             if (session.transaction.isActive)
                 runInActiveTransaction(session, body)
             else
@@ -47,7 +44,6 @@ abstract class HibernateDAO<T, in ID : java.io.Serializable>(
                 throw IllegalStateException("Transaction is not active!")
             }
         }.run {
-            println("DEBUG - runInActiveTransaction")
             body()
         }
 
@@ -57,7 +53,6 @@ abstract class HibernateDAO<T, in ID : java.io.Serializable>(
                 also {
                     session.beginTransaction()
                 }.run {
-                    println("DEBUG - runInNewTransaction")
                     body()
                 }.also {
                     session.flush()

@@ -84,7 +84,7 @@ class TransferValidatorTest {
             // WHEN
             TransferValidator.validateBeforeFinishingTransfer(originAccount, transferAmount)
 
-        }.withMessageContaining("Origin account [id=${originAccount}] has a balance: ${originAccount.balanceMinor} that is less than the transfer amount: $transferAmount")
+        }.withMessageContaining("Origin account [id=${originAccount.id}] has a balance: ${originAccount.balanceMinor} that is less than the transfer amount: $transferAmount")
     }
 
     @Test

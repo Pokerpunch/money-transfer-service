@@ -6,6 +6,7 @@ import com.revolut.moneytransferservice.periphery.dto.TransferDetails
 import com.revolut.moneytransferservice.periphery.dto.TransferRequest
 import com.revolut.moneytransferservice.periphery.mapper.TransferMapper.mapToTransferDetails
 import com.revolut.moneytransferservice.util.RequestParser
+import org.apache.log4j.Logger
 import spark.Request
 import spark.Response
 import spark.Spark
@@ -16,6 +17,10 @@ class TransferController(
     private val transferService: TransferService,
     private val gson: Gson
 ) {
+    companion object {
+        val logger: Logger = Logger.getLogger(TransferController::class.java)
+    }
+
     init {
         initialiseRoutes()
     }
@@ -30,26 +35,26 @@ class TransferController(
 
     private fun getAllTransfers(request: Request, response: Response): List<TransferDetails> =
         also {
-            println("Received request to get all transfers")
+            logger.debug("Received request to get all transfers")
         }.run {
             transferService.getAllTransfers()
         }.map {
             mapToTransferDetails(it)
         }.also {
-            println("Returning response: $it")
+            logger.debug("Returning response: $it")
         }
 
     private fun getTransfer(request: Request, response: Response): TransferDetails {
         val transferId: Long = RequestParser.getRequestParameter(request = request, parameterName = "id")
 
         return also {
-            println("Received request to get transfer with ID: $transferId")
+            logger.debug("Received request to get transfer with ID: $transferId")
         }.run {
             transferService.getTransfer(transferId)
         }.let {
             mapToTransferDetails(it)
         }.also {
-            println("Returning response: $it")
+            logger.debug("Returning response: $it")
         }
     }
 
@@ -57,7 +62,7 @@ class TransferController(
         val transferRequest: TransferRequest = RequestParser.getBody(request, gson)
 
         return transferRequest.also {
-            println("Received: $it")
+            logger.debug("Received: $it")
         }.run {
             transferService.executeTransfer(originAccountId, destinationAccountId, amountMinor)
         }.let {
@@ -65,7 +70,7 @@ class TransferController(
         }.also {
             response.status(HttpServletResponse.SC_CREATED)
         }.also {
-            println("Returning response: $it")
+            logger.debug("Returning response: $it")
         }
     }
 }
