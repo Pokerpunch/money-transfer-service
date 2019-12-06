@@ -12,7 +12,7 @@ import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 import javax.persistence.Version
 
-private const val ACCOUNT_SEQUENCE_GENERATOR = "user_generator"
+private const val ACCOUNT_SEQUENCE_GENERATOR = "account_generator"
 
 @Entity
 @Table(name = "accounts")
