@@ -1,7 +1,7 @@
-###About
+### About
 This is a simple REST API service to showcase money transfers between accounts.
 
-###Data model
+### Data model
 ```
 User
  |
@@ -10,7 +10,7 @@ Account
 Transfer
 ``` 
 
-###API
+### API
 *Users*
 * `GET api/users`
 * `GET api/users/{id}`
